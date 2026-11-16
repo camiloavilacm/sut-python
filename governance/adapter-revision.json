@@ -1,0 +1,29 @@
+{
+  "feature_ref": "12a55fb4b9312303378af72f96a28734b6b9ec9a",
+  "upstream": "qa-features/governance/source",
+  "revision": "maintenance-shared-v1",
+  "reason": "Byte-identical shared controller; registered Step 2\u20134 checks retain prior semantics",
+  "files": {
+    "harness/scripts/common.py": {
+      "upstream_sha256": "34f55a4198bb6fad97b25954dc48bda50f27ab1501bf3ee7bd2e6640def6ef75",
+      "adapter_sha256": "73c9fda469bf99b8a70dcb3d8a2a78d45eb41cb318831f150a50e67a816e26cc"
+    },
+    "harness/scripts/verify_step.py": {
+      "upstream_sha256": "8e2a1ed079408ee06ddd358c85f3c2b61afeaf3201c7ceb15cbff01ddd2074f2",
+      "adapter_sha256": "85c6fb4ff41f036415fb667ff02ece8712aafb66c661142ed2db0236b1ca0936"
+    },
+    "AGENTS.md": {
+      "upstream_sha256": "0a739b5c9ab15583eb0a246d8f8a49a50f12edcd415ffa693135b7f49b2b2e54",
+      "adapter_sha256": "0a739b5c9ab15583eb0a246d8f8a49a50f12edcd415ffa693135b7f49b2b2e54"
+    },
+    "harness/evals/test_step2.py": {
+      "upstream_sha256": null,
+      "adapter_sha256": "6496b5b67a234478611261b3351f7778d68fc55052aa355b28af8a435ac96141"
+    }
+  },
+  "canonical_source": "qa-features/governance/source",
+  "canonical_files": {
+    "harness/scripts/common.py": "73c9fda469bf99b8a70dcb3d8a2a78d45eb41cb318831f150a50e67a816e26cc",
+    "harness/scripts/verify_step.py": "85c6fb4ff41f036415fb667ff02ece8712aafb66c661142ed2db0236b1ca0936"
+  }
+}

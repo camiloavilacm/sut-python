@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "status": "approved",
+  "story": "SEED-1",
+  "scenario_ids": [
+    "AC-1",
+    "AC-2",
+    "AC-3"
+  ],
+  "api_prefix": "/api",
+  "authentication": {
+    "header": "Authorization",
+    "scheme": "Token",
+    "token_kind": "jwt",
+    "browser_storage": "localStorage",
+    "storage_key": "jwt"
+  },
+  "ui": {
+    "register_route": "/register",
+    "login_route": "/login",
+    "protected_route": "/settings",
+    "unauthenticated_redirect": "/login",
+    "invalid_login_message": "Email or password is invalid.",
+    "fresh_context": "Empty cookies, localStorage and sessionStorage before each scenario; remain empty after rejected login."
+  },
+  "checks": {
+    "register": {
+      "method": "POST",
+      "path": "/users",
+      "status": 201
+    },
+    "login": {
+      "method": "POST",
+      "path": "/users/login",
+      "status": 200
+    },
+    "current_user": {
+      "method": "GET",
+      "path": "/user",
+      "status": 200
+    },
+    "invalid_login": {
+      "method": "POST",
+      "path": "/users/login",
+      "status": 422,
+      "body": {
+        "errors": {
+          "email or password": [
+            "is invalid"
+          ]
+        }
+      }
+    },
+    "unauthenticated_user": {
+      "method": "GET",
+      "path": "/user",
+      "status": 401
+    }
+  },
+  "baseline_policy": "Idempotent provisioning only; tests never edit or delete the baseline user. Fresh databases must restore exactly the same baseline.",
+  "observer_states": [
+    "complete",
+    "partial",
+    "unavailable",
+    "error"
+  ],
+  "redaction": "Never publish passwords, JWTs, Authorization values, or raw browser storage. Persist authorization_present only.",
+  "runtime_ai_allowed": false
+}

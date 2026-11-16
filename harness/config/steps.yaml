@@ -1,0 +1,345 @@
+{
+  "version": 1,
+  "steps": {
+    "0.5": {
+      "requires_steps": [],
+      "requires_checks": [],
+      "allowed_paths": [
+        "MASTER-CONTRACT.md",
+        "AGENTS.md",
+        "CLAUDE.md",
+        "planning/",
+        ".agents/",
+        ".codex/",
+        ".claude/",
+        "harness/"
+      ],
+      "allowed_repositories": [],
+      "allowed_categories": [
+        "development-governance"
+      ],
+      "required_outputs": [
+        "shared-contract",
+        "four-skills",
+        "three-adapters",
+        "state-evidence-schemas"
+      ],
+      "verification_checks": [
+        "adapters",
+        "evals",
+        "codex-native",
+        "claude-artifacts",
+        "antigravity-native",
+        "native-cycle"
+      ],
+      "prohibited_future_artifacts": [
+        "all-product-directories"
+      ],
+      "approval_required": "explicit-user-authorization; feature approval is separate",
+      "exit_condition": "all required checks PASS under the explicitly approved validation profile, mandatory scope audit PASS, stop; deferred Claude live checks remain NOT RUN"
+    },
+    "1": {
+      "requires_steps": [
+        "0.5"
+      ],
+      "requires_checks": [
+        "phase0",
+        "phase05",
+        "contract-inputs"
+      ],
+      "allowed_paths": [
+        "qa-features/"
+      ],
+      "allowed_repositories": [
+        "qa-features"
+      ],
+      "allowed_categories": [
+        "README.md",
+        "openapi.yml",
+        "selectors.json",
+        "api-expectations.yaml",
+        "api/auth.hurl",
+        "data/baseline.json",
+        "features/auth/login.feature",
+        "schemas/results.schema.json",
+        "schemas/campaign.schema.json",
+        "tools/validate/"
+      ],
+      "required_outputs": [
+        "README.md",
+        "openapi.yml",
+        "selectors.json",
+        "api-expectations.yaml",
+        "api/auth.hurl",
+        "data/baseline.json",
+        "features/auth/login.feature",
+        "schemas/results.schema.json",
+        "schemas/campaign.schema.json",
+        "tools/validate/"
+      ],
+      "verification_checks": [
+        "openapi",
+        "hurl",
+        "gherkin",
+        "selectors",
+        "baseline",
+        "json-schemas",
+        "governance"
+      ],
+      "prohibited_future_artifacts": [
+        "later-step-implementation"
+      ],
+      "approval_required": "explicit-user-authorization; feature approval is separate",
+      "exit_condition": "all required checks PASS, mandatory scope audit PASS, stop"
+    },
+    "2": {
+      "requires_steps": [
+        "1"
+      ],
+      "requires_checks": [
+        "feature-approved"
+      ],
+      "allowed_paths": [
+        "sut-python/",
+        "sut-node/"
+      ],
+      "allowed_repositories": [
+        "sut-node",
+        "sut-python"
+      ],
+      "allowed_categories": [
+        "two-suts",
+        "postgres",
+        "immutable-frontend"
+      ],
+      "required_outputs": [
+        "two-suts",
+        "postgres",
+        "immutable-frontend"
+      ],
+      "verification_checks": [
+        "hurl",
+        "seeds",
+        "ui-parity",
+        "digests"
+      ],
+      "prohibited_future_artifacts": [
+        "later-step-implementation"
+      ],
+      "approval_required": "explicit-user-authorization; feature approval is separate",
+      "exit_condition": "all required checks PASS, mandatory scope audit PASS, stop"
+    },
+    "3": {
+      "requires_steps": [
+        "2"
+      ],
+      "requires_checks": [
+        "feature-approved"
+      ],
+      "allowed_paths": [
+        "qa-python/"
+      ],
+      "allowed_repositories": [
+        "qa-python"
+      ],
+      "allowed_categories": [
+        "python-runner"
+      ],
+      "required_outputs": [
+        "python-runner"
+      ],
+      "verification_checks": [
+        "12-passes",
+        "observer-complete"
+      ],
+      "prohibited_future_artifacts": [
+        "later-step-implementation"
+      ],
+      "approval_required": "explicit-user-authorization; feature approval is separate",
+      "exit_condition": "all required checks PASS, mandatory scope audit PASS, stop"
+    },
+    "4": {
+      "requires_steps": [
+        "3"
+      ],
+      "requires_checks": [
+        "feature-approved"
+      ],
+      "allowed_paths": [
+        "planning/",
+        "harness/",
+        "qa-features/harness/",
+        "qa-features/governance/",
+        "qa-features/planning/",
+        "qa-features/.agents/",
+        "qa-features/.claude/",
+        "qa-features/.codex/",
+        "qa-features/reports/",
+        "qa-features/.pytest_cache/",
+        "sut-python/harness/",
+        "sut-python/governance/",
+        "sut-python/planning/",
+        "sut-python/.agents/",
+        "sut-python/.claude/",
+        "sut-python/.codex/",
+        "sut-python/reports/",
+        "sut-python/.pytest_cache/",
+        "sut-node/harness/",
+        "sut-node/governance/",
+        "sut-node/planning/",
+        "sut-node/.agents/",
+        "sut-node/.claude/",
+        "sut-node/.codex/",
+        "sut-node/reports/",
+        "sut-node/.pytest_cache/",
+        "qa-python/harness/",
+        "qa-python/governance/",
+        "qa-python/planning/",
+        "qa-python/.agents/",
+        "qa-python/.claude/",
+        "qa-python/.codex/",
+        "qa-python/reports/",
+        "qa-python/.pytest_cache/",
+        "qa-typescript/harness/",
+        "qa-typescript/governance/",
+        "qa-typescript/planning/",
+        "qa-typescript/.agents/",
+        "qa-typescript/.claude/",
+        "qa-typescript/.codex/",
+        "qa-typescript/reports/",
+        "qa-typescript/.pytest_cache/"
+      ],
+      "allowed_repositories": [
+        "qa-features",
+        "sut-python",
+        "sut-node",
+        "qa-python",
+        "qa-typescript"
+      ],
+      "allowed_categories": [
+        "authorized-maintenance-governance",
+        "planning",
+        "verification-outputs"
+      ],
+      "required_outputs": [
+        "cypress-runner"
+      ],
+      "verification_checks": [
+        "6-passes",
+        "result-schema"
+      ],
+      "prohibited_future_artifacts": [
+        "later-step-implementation"
+      ],
+      "approval_required": "Explicit Step 4 maintenance amendment: User Implement the plan; Continue. Stop before Step 5.",
+      "exit_condition": "all required checks PASS, mandatory scope audit PASS, stop"
+    },
+    "5": {
+      "requires_steps": [
+        "4"
+      ],
+      "requires_checks": [
+        "feature-approved"
+      ],
+      "allowed_paths": [
+        "qa-features/tools/"
+      ],
+      "allowed_repositories": [
+        "qa-features"
+      ],
+      "allowed_categories": [
+        "tracker-cli"
+      ],
+      "required_outputs": [
+        "tracker-cli"
+      ],
+      "verification_checks": [
+        "dry-run",
+        "sandbox-comment",
+        "idempotency",
+        "no-transition"
+      ],
+      "prohibited_future_artifacts": [
+        "later-step-implementation"
+      ],
+      "approval_required": "explicit-user-authorization; feature approval is separate",
+      "exit_condition": "all required checks PASS, mandatory scope audit PASS, stop"
+    },
+    "6": {
+      "requires_steps": [
+        "5"
+      ],
+      "requires_checks": [
+        "feature-approved"
+      ],
+      "allowed_paths": [
+        "qa-features/",
+        "qa-python/",
+        "qa-typescript/"
+      ],
+      "allowed_repositories": [
+        "qa-features",
+        "qa-python",
+        "qa-typescript"
+      ],
+      "allowed_categories": [
+        "central-workflow",
+        "campaign-aggregation"
+      ],
+      "required_outputs": [
+        "central-workflow",
+        "campaign-aggregation"
+      ],
+      "verification_checks": [
+        "six-jobs",
+        "single-report",
+        "failure-paths",
+        "no-model-calls"
+      ],
+      "prohibited_future_artifacts": [
+        "later-step-implementation"
+      ],
+      "approval_required": "explicit-user-authorization; feature approval is separate",
+      "exit_condition": "all required checks PASS, mandatory scope audit PASS, stop"
+    },
+    "7": {
+      "requires_steps": [
+        "6"
+      ],
+      "requires_checks": [
+        "feature-approved"
+      ],
+      "allowed_paths": [
+        "qa-features/",
+        "sut-python/",
+        "sut-node/",
+        "qa-python/",
+        "qa-typescript/"
+      ],
+      "allowed_repositories": [
+        "qa-features",
+        "qa-python",
+        "qa-typescript",
+        "sut-node",
+        "sut-python"
+      ],
+      "allowed_categories": [
+        "smoke-release"
+      ],
+      "required_outputs": [
+        "smoke-release"
+      ],
+      "verification_checks": [
+        "image-digests",
+        "reproduction",
+        "18-passes",
+        "rollback"
+      ],
+      "prohibited_future_artifacts": [
+        "later-step-implementation"
+      ],
+      "approval_required": "explicit-user-authorization; feature approval is separate",
+      "exit_condition": "all required checks PASS, mandatory scope audit PASS, stop"
+    }
+  }
+}

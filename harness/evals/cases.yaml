@@ -1,0 +1,16 @@
+version: 1
+providers: [antigravity, codex, claude]
+mode: isolated-deterministic-fixtures
+cases:
+  - {id: explicit-step1, test: test_explicit_step1_fixture_allows_each_provider, expected: allow-only-step1}
+  - {id: step3-before-step2, test: test_step3_before_step2_is_blocked_each_provider, expected: blocked}
+  - {id: cypress-in-step1, test: test_cypress_during_step1_blocked_each_adapter, expected: denied}
+  - {id: unauthorized-repository, test: test_unauthorized_repo_and_empty_dir_audited, expected: audit-fails}
+  - {id: unexecuted-pass, test: test_unexecuted_pass_rejected_by_schema, expected: rejected}
+  - {id: self-approval, test: test_self_approval_and_state_edit_do_not_grant_product_step, expected: rejected}
+  - {id: missing-evidence, test: test_missing_evidence_cannot_complete, expected: gate-fails}
+  - {id: antigravity-to-codex, test: test_handoff_cycle_preserves_state_and_scope, expected: release-claim-preflight}
+  - {id: codex-to-claude, test: test_handoff_cycle_preserves_state_and_scope, expected: release-claim-preflight}
+  - {id: claude-to-antigravity, test: test_handoff_cycle_preserves_state_and_scope, expected: release-claim-preflight}
+  - {id: mirrored-skill-drift, test: test_mirror_drift_fails, expected: rejected}
+  - {id: automatic-next-step, test: test_next_step_never_implicitly_authorized, expected: blocked}

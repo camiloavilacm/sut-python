@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "phase": "2-complete",
+  "authorized_step": null,
+  "authorization": {
+    "step": "none",
+    "source": "human",
+    "reference": "Not activated",
+    "approved_feature_ref": null
+  },
+  "owner": null,
+  "approval_status": "not_requested",
+  "completed_steps": [],
+  "feature_ref": null,
+  "tooling_ref": null,
+  "git_revisions": {},
+  "baseline": "harness/evidence/maintenance-baseline.json",
+  "prerequisites": {},
+  "evidence": [],
+  "blockers": [
+    "Fresh checkout requires operator activation"
+  ],
+  "next_action": "Obtain explicit authorization before writes"
+}

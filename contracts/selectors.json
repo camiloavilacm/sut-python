@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "status": "approved",
+  "selectors": {
+    "register.username": {
+      "by": "label",
+      "value": "Username"
+    },
+    "register.email": {
+      "by": "label",
+      "value": "Email"
+    },
+    "register.password": {
+      "by": "label",
+      "value": "Password"
+    },
+    "register.submit": {
+      "by": "role",
+      "value": "button",
+      "name": "Sign up"
+    },
+    "login.email": {
+      "by": "label",
+      "value": "Email"
+    },
+    "login.password": {
+      "by": "label",
+      "value": "Password"
+    },
+    "login.submit": {
+      "by": "role",
+      "value": "button",
+      "name": "Sign in"
+    },
+    "login.error": {
+      "by": "role",
+      "value": "alert"
+    },
+    "login.heading": {
+      "by": "role",
+      "value": "heading",
+      "name": "Sign in"
+    },
+    "account.identity": {
+      "by": "data-testid",
+      "value": "account-email"
+    }
+  }
+}

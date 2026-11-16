@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "feature_ref": "12a55fb4b9312303378af72f96a28734b6b9ec9a",
+  "files": {
+    "index.html": "82009999fe9e852dbba88dfc99c75deccab1f784e0e35f1ee883b98b76031ef9",
+    "assets/app.js": "60e4d6171ce0b2829436b9cb5bcc4171238f571806e7d1fb1823efc94528957e",
+    "assets/style.css": "14cf22e095fba1b3f91aede1d26fcce8b38bcbc0e180a8b7d053fb5d9976e694"
+  }
+}

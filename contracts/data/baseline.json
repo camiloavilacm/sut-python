@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "status": "approved",
+  "immutable": true,
+  "synthetic_only": true,
+  "users": [
+    {
+      "username": "qa_baseline",
+      "email": "qa.baseline@example.test",
+      "password": "QA-Baseline-Only-2026!",
+      "bio": null,
+      "image": null
+    }
+  ],
+  "registration_identity": {
+    "username_template": "qa_<uuid4hex>",
+    "email_template": "qa.<uuid4hex>@example.test",
+    "password": "QA-Generated-Only-2026!",
+    "uniqueness": "Fresh UUID v4 per registration attempt, including retries; record campaign/execution/slot association; never reuse baseline identity."
+  },
+  "invalid_login_password": "QA-Invalid-Only-2026!"
+}

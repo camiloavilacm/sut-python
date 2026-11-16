@@ -1,0 +1,11 @@
+{
+  "exceptions": [
+    {
+      "id": "CLAUDE-ARTIFACTS-ONLY",
+      "source": "conversation",
+      "instruction": "I dont have claude access, lets just create the file for them",
+      "effect": "Retain and statically validate Claude native artifacts. Defer all live Claude tests and Claude handoffs; do not treat them as PASS. Validate current live workflow with Antigravity and Codex.",
+      "claude_live_status": "NOT RUN"
+    }
+  ]
+}

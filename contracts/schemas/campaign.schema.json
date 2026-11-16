@@ -1,0 +1,211 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue_id",
+    "campaign_id",
+    "feature_ref",
+    "status",
+    "slots"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "issue_id": {
+      "const": "SEED-1"
+    },
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "feature_ref": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}([a-f0-9]{24})?$"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "failed",
+        "error",
+        "incomplete"
+      ]
+    },
+    "slots": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slot_id",
+          "state",
+          "result"
+        ],
+        "properties": {
+          "slot_id": {
+            "enum": [
+              "sut-python:playwright",
+              "sut-python:selenium",
+              "sut-python:cypress",
+              "sut-node:playwright",
+              "sut-node:selenium",
+              "sut-node:cypress"
+            ]
+          },
+          "state": {
+            "enum": [
+              "complete",
+              "missing"
+            ]
+          },
+          "result": {
+            "oneOf": [
+              {
+                "$ref": "results.schema.json"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "missing"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "result": {
+                  "type": "null"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "result": {
+                  "$ref": "results.schema.json"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "slot_id": {
+                "const": "sut-python:playwright"
+              }
+            },
+            "required": [
+              "slot_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "properties": {
+              "slot_id": {
+                "const": "sut-python:selenium"
+              }
+            },
+            "required": [
+              "slot_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "properties": {
+              "slot_id": {
+                "const": "sut-python:cypress"
+              }
+            },
+            "required": [
+              "slot_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "properties": {
+              "slot_id": {
+                "const": "sut-node:playwright"
+              }
+            },
+            "required": [
+              "slot_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "properties": {
+              "slot_id": {
+                "const": "sut-node:selenium"
+              }
+            },
+            "required": [
+              "slot_id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "properties": {
+              "slot_id": {
+                "const": "sut-node:cypress"
+              }
+            },
+            "required": [
+              "slot_id"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "One QA campaign per issue/campaign; specification only",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "passed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "slots": {
+            "items": {
+              "properties": {
+                "state": {
+                  "const": "complete"
+                },
+                "result": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "const": "passed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

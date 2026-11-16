@@ -1,0 +1,10 @@
+.git
+.venv
+node_modules
+.env
+.dev
+harness
+.agents
+.claude
+.codex
+planning

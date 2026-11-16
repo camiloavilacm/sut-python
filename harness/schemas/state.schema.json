@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Development harness state (not QA results)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "phase",
+    "authorized_step",
+    "authorization",
+    "owner",
+    "approval_status",
+    "completed_steps",
+    "feature_ref",
+    "tooling_ref",
+    "git_revisions",
+    "baseline",
+    "prerequisites",
+    "evidence",
+    "blockers",
+    "next_action"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "phase": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authorized_step": {
+      "enum": [
+        "0.5",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        null
+      ]
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "step",
+        "source",
+        "reference",
+        "approved_feature_ref"
+      ],
+      "properties": {
+        "step": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "enum": [
+            "conversation",
+            "human"
+          ]
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approved_feature_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "owner": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "id"
+          ],
+          "properties": {
+            "provider": {
+              "enum": [
+                "codex",
+                "claude",
+                "antigravity"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "approval_status": {
+      "enum": [
+        "not_requested",
+        "pending",
+        "approved"
+      ]
+    },
+    "completed_steps": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "0",
+          "0.5",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7"
+        ]
+      }
+    },
+    "feature_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tooling_ref": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "git_revisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "baseline": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prerequisites": {
+      "type": "object",
+      "additionalProperties": {
+        "enum": [
+          "PASS",
+          "FAIL",
+          "NOT RUN"
+        ]
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "next_action": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

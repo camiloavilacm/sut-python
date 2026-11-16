@@ -1,0 +1,317 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue_id",
+    "campaign_id",
+    "execution_id",
+    "feature_ref",
+    "tooling_ref",
+    "slot_id",
+    "sut_revision",
+    "runner_revision",
+    "started_at",
+    "finished_at",
+    "status",
+    "scenarios"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "issue_id": {
+      "const": "SEED-1"
+    },
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "execution_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "feature_ref": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}([a-f0-9]{24})?$"
+    },
+    "tooling_ref": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}([a-f0-9]{24})?$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "slot_id": {
+      "enum": [
+        "sut-python:playwright",
+        "sut-python:selenium",
+        "sut-python:cypress",
+        "sut-node:playwright",
+        "sut-node:selenium",
+        "sut-node:cypress"
+      ]
+    },
+    "sut_revision": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}([a-f0-9]{24})?$"
+    },
+    "runner_revision": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}([a-f0-9]{24})?$"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "finished_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "passed",
+        "failed",
+        "error",
+        "not_run"
+      ]
+    },
+    "scenarios": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "status",
+          "duration_ms",
+          "observer",
+          "artifacts",
+          "error"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "AC-1",
+              "AC-2",
+              "AC-3"
+            ]
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "failed",
+              "error",
+              "not_run"
+            ]
+          },
+          "duration_ms": {
+            "type": "number",
+            "minimum": 0
+          },
+          "observer": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "state",
+              "events",
+              "detail"
+            ],
+            "properties": {
+              "state": {
+                "enum": [
+                  "complete",
+                  "partial",
+                  "unavailable",
+                  "error"
+                ]
+              },
+              "events": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "method",
+                    "path",
+                    "status",
+                    "authorization_present"
+                  ],
+                  "properties": {
+                    "method": {
+                      "enum": [
+                        "GET",
+                        "POST"
+                      ]
+                    },
+                    "path": {
+                      "enum": [
+                        "/users",
+                        "/users/login",
+                        "/user"
+                      ]
+                    },
+                    "status": {
+                      "type": "integer",
+                      "minimum": 100,
+                      "maximum": 599
+                    },
+                    "authorization_present": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              },
+              "detail": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "artifacts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "sha256",
+                "kind"
+              ],
+              "properties": {
+                "path": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_./-]*$",
+                  "not": {
+                    "pattern": "(^|/)\\.\\.(/|$)"
+                  }
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                "kind": {
+                  "enum": [
+                    "screenshot",
+                    "trace",
+                    "log",
+                    "network"
+                  ]
+                }
+              }
+            }
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "passed"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "observer": {
+                  "properties": {
+                    "state": {
+                      "const": "complete"
+                    },
+                    "events": {
+                      "minItems": 1
+                    }
+                  }
+                },
+                "artifacts": {
+                  "minItems": 1
+                },
+                "error": {
+                  "type": "null"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "allOf": [
+        {
+          "contains": {
+            "properties": {
+              "id": {
+                "const": "AC-1"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "properties": {
+              "id": {
+                "const": "AC-2"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "contains": {
+            "properties": {
+              "id": {
+                "const": "AC-3"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "QA execution result; distinct from development harness evidence",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "passed"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "scenarios": {
+            "items": {
+              "properties": {
+                "status": {
+                  "const": "passed"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

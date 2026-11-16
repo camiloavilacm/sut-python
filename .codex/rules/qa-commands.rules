@@ -1,0 +1,3 @@
+# Execution policy only; filesystem scope is audited separately.
+prefix_rule(pattern = ["git", "tag"], decision = "forbidden", justification = "Human approval boundary; agents never tag autonomously")
+prefix_rule(pattern = ["git", "push"], decision = "prompt", justification = "Remote changes require explicit authorization")

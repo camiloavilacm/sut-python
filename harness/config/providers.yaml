@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "providers": {
+    "codex": {
+      "instructions": "AGENTS.md",
+      "skills": ".agents/skills",
+      "config": ".codex/config.toml",
+      "interception": "sandbox and execpolicy; mandatory external audit; no Codex hooks configured",
+      "validation_mode": "live"
+    },
+    "claude": {
+      "instructions": "CLAUDE.md imports AGENTS.md",
+      "skills": ".claude/skills",
+      "config": ".claude/settings.json",
+      "interception": "PreToolUse permissionDecision; PostToolUse audit; Stop reporting",
+      "validation_mode": "artifacts-only"
+    },
+    "antigravity": {
+      "instructions": "AGENTS.md",
+      "skills": ".agents/skills",
+      "config": ".agents/hooks.json",
+      "interception": "camelCase toolCall; decision deny; PostToolUse output is empty JSON",
+      "validation_mode": "live"
+    }
+  },
+  "validation_policy": {
+    "profile": "claude-artifacts-only",
+    "exception_reference": "harness/approved-exceptions.json#CLAUDE-ARTIFACTS-ONLY",
+    "required_live_providers": [
+      "antigravity",
+      "codex"
+    ],
+    "artifacts_only_providers": [
+      "claude"
+    ]
+  }
+}

@@ -1,0 +1,327 @@
+{
+  "timestamp": "2026-11-16T10:09:55.391816+00:00",
+  "scope": "Phase 0 only",
+  "checks": [
+    {
+      "id": "git",
+      "command": [
+        "git",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "git version 2.39.5 (Apple Git-154)",
+      "stderr": ""
+    },
+    {
+      "id": "github_cli",
+      "command": [
+        "gh",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "gh version 2.87.3 (2026-02-23)\nhttps://github.com/cli/cli/releases/tag/v2.87.3",
+      "stderr": ""
+    },
+    {
+      "id": "python",
+      "command": [
+        "python3",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "Python 3.14.4",
+      "stderr": ""
+    },
+    {
+      "id": "python_pip",
+      "command": [
+        "python3",
+        "-m",
+        "pip",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "pip 26.1 from /opt/homebrew/lib/python3.14/site-packages/pip (python 3.14)",
+      "stderr": ""
+    },
+    {
+      "id": "python_venv",
+      "command": [
+        "python3",
+        "-c",
+        "import venv,ensurepip; print(\"venv available; bundled pip=\"+ensurepip.version())"
+      ],
+      "exit_code": 0,
+      "stdout": "venv available; bundled pip=26.1",
+      "stderr": ""
+    },
+    {
+      "id": "node",
+      "command": [
+        "node",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "v26.13.0",
+      "stderr": ""
+    },
+    {
+      "id": "npm",
+      "command": [
+        "npm",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "11.20.0",
+      "stderr": ""
+    },
+    {
+      "id": "hurl",
+      "command": [
+        "hurl",
+        "--version"
+      ],
+      "exit_code": null,
+      "status": "UNAVAILABLE",
+      "stderr": "Executable not found"
+    },
+    {
+      "id": "hurlfmt",
+      "command": [
+        "hurlfmt",
+        "--version"
+      ],
+      "exit_code": null,
+      "status": "UNAVAILABLE",
+      "stderr": "Executable not found"
+    },
+    {
+      "id": "docker",
+      "command": [
+        "docker",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "Docker version 29.9.2, build a82e528",
+      "stderr": ""
+    },
+    {
+      "id": "compose",
+      "command": [
+        "docker",
+        "compose",
+        "version"
+      ],
+      "exit_code": 0,
+      "stdout": "Docker Compose version v5.6.1",
+      "stderr": ""
+    },
+    {
+      "id": "docker_daemon",
+      "command": [
+        "docker",
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "permission denied while trying to connect to the docker API at unix:///Users/camiloavila/.docker/run/docker.sock"
+    },
+    {
+      "id": "codex",
+      "command": [
+        "codex",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "codex-cli 0.169.0",
+      "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Operation not permitted (os error 1)"
+    },
+    {
+      "id": "claude",
+      "command": [
+        "claude",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "2.1.305 (Claude Code)",
+      "stderr": ""
+    },
+    {
+      "id": "antigravity_cli",
+      "command": [
+        "agy",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "1.5.9",
+      "stderr": ""
+    },
+    {
+      "id": "antigravity_app",
+      "command": [
+        "/usr/libexec/PlistBuddy",
+        "-c",
+        "Print :CFBundleShortVersionString",
+        "/Applications/Antigravity.app/Contents/Info.plist"
+      ],
+      "exit_code": 0,
+      "stdout": "2.28.2",
+      "stderr": ""
+    },
+    {
+      "id": "chrome",
+      "command": [
+        "/usr/libexec/PlistBuddy",
+        "-c",
+        "Print :CFBundleShortVersionString",
+        "/Applications/Google Chrome.app/Contents/Info.plist"
+      ],
+      "exit_code": 0,
+      "stdout": "157.0.8103.51",
+      "stderr": ""
+    },
+    {
+      "id": "github_auth",
+      "command": [
+        "gh",
+        "api",
+        "user",
+        "--jq",
+        "{authenticated: (.login != null)}"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "error connecting to api.github.com\ncheck your internet connection or https://githubstatus.com"
+    },
+    {
+      "id": "github_public_git",
+      "command": [
+        "git",
+        "ls-remote",
+        "https://github.com/github/gitignore.git",
+        "HEAD"
+      ],
+      "exit_code": 128,
+      "stdout": "",
+      "stderr": "fatal: unable to access 'https://github.com/github/gitignore.git/': Could not resolve host: github.com"
+    },
+    {
+      "id": "npm_registry",
+      "command": [
+        "npm",
+        "ping",
+        "--fetch-retries=0",
+        "--fetch-timeout=15000"
+      ],
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "npm notice PING https://registry.npmjs.org/\nnpm error code ENOTFOUND\nnpm error syscall getaddrinfo\nnpm error errno ENOTFOUND\nnpm error network request to https://registry.npmjs.org/-/ping failed, reason: getaddrinfo ENOTFOUND registry.npmjs.org\nnpm error network This is a problem related to network connectivity.\nnpm error network In most cases you are behind a proxy or have bad network settings.\nnpm error network\nnpm error network If you are behind a proxy, please make sure that the 'proxy' config is set properly.  See: 'npm help config'\nnpm error Log files were not written due to an error writing to the directory: /Users/camiloavila/.npm/_logs\nnpm error You can rerun the command with `--loglevel=verbose` to see the logs in your terminal"
+    },
+    {
+      "id": "brew",
+      "command": [
+        "brew",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "Homebrew 7.0.13",
+      "stderr": ""
+    }
+  ],
+  "retries": [
+    {
+      "id": "docker_daemon",
+      "command": [
+        "docker",
+        "info",
+        "--format",
+        "{{.ServerVersion}}"
+      ],
+      "exit_code": 0,
+      "stdout": "29.9.2",
+      "stderr": "",
+      "context": "escalated retry"
+    },
+    {
+      "id": "codex",
+      "command": [
+        "codex",
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "codex-cli 0.169.0",
+      "stderr": "",
+      "context": "escalated retry"
+    },
+    {
+      "id": "github_auth",
+      "command": [
+        "gh",
+        "api",
+        "user",
+        "--jq",
+        "{authenticated: (.login != null)}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"authenticated\":true}",
+      "stderr": "",
+      "context": "escalated retry"
+    },
+    {
+      "id": "github_public_git",
+      "command": [
+        "git",
+        "ls-remote",
+        "https://github.com/github/gitignore.git",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "b71db924d35085e481ad7c7ad8a7435b8d8b3016\tHEAD",
+      "stderr": "",
+      "context": "escalated retry"
+    },
+    {
+      "id": "npm_registry",
+      "command": [
+        "npm",
+        "ping",
+        "--fetch-retries=0",
+        "--fetch-timeout=15000"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "npm notice PING https://registry.npmjs.org/\nnpm notice PONG 273ms",
+      "context": "escalated retry"
+    }
+  ],
+  "installation_connectivity": [
+    {
+      "id": "python_package_index",
+      "method": "HEAD",
+      "url": "https://pypi.org/simple/",
+      "http_status": 200,
+      "result": "REACHABLE"
+    },
+    {
+      "id": "browser_download_host",
+      "method": "HEAD",
+      "url": "https://cdn.playwright.dev/",
+      "http_status": 400,
+      "result": "REACHABLE_HTTP_ERROR; download not verified"
+    }
+  ],
+  "python_isolation": {
+    "status": "PASS",
+    "commands": [
+      "python3 -m venv <temporary-directory>/venv",
+      "<temporary-directory>/venv/bin/python -c 'import sys; assert sys.prefix != sys.base_prefix; print(\"isolated interpreter confirmed\")'"
+    ],
+    "exit_codes": [
+      0,
+      0
+    ],
+    "note": "Temporary-directory placeholder; fixture removed automatically. No packages installed."
+  }
+}

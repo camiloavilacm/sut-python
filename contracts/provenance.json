@@ -1,0 +1,15 @@
+{
+  "feature_ref": "12a55fb4b9312303378af72f96a28734b6b9ec9a",
+  "tag": "seed-1-approved-v1",
+  "files": {
+    "README.md": "618380dc84101c8b1c5d2fa1402521375ab23ca494daeb2317569432151c724c",
+    "openapi.yml": "e9c156075729b65ea4e9d90d4e3203d3e6516a56b3f09d4c75d6255099a76470",
+    "selectors.json": "e16a07e6431eacba44ea9142415b548a1cfe0f31020f50a2594aa5a48486ae29",
+    "api-expectations.yaml": "c9798589823204532bac7a64a392f9b20aab4fb581db222b73e235b0e462b216",
+    "api/auth.hurl": "519b5edefe9bdb61b5aac49ef54f6614e854fb033db34c6fd57723afe1824de3",
+    "data/baseline.json": "1aadda5bd94c4db891e4a999c07b38291abbbaaa485cc8abbf4f379a0c95b51f",
+    "features/auth/login.feature": "916baf659389700171aa1eac7fef318947de33ba0d6bbcf17a07af0e7fd1ff78",
+    "schemas/results.schema.json": "2f2ba06c1e582173d143b25e1ab03a711ac7ee849525922ffef522aff42b5b06",
+    "schemas/campaign.schema.json": "9427ae5cf3248dabfd2f705bceb3fe0403553a928d1f2ff11b7b89de939f239b"
+  }
+}

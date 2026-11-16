@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "product_repositories": [
+    "qa-features",
+    "sut-python",
+    "sut-node",
+    "qa-python",
+    "qa-typescript"
+  ],
+  "workspace_git_allowed": false,
+  "symlink_policy": "reject pending human review",
+  "runtime_ai_in_qa_ci": false,
+  "baseline_excludes": [
+    ".git internals (Git context audited separately)",
+    "workspace/repository-root .venv",
+    "__pycache__",
+    "harness/evidence (evidence validated separately)"
+  ],
+  "external_control": "Protect approval ledger, baseline and evidence independently; same-user hooks cannot defend against their own deliberate replacement.",
+  "immutable_contract_paths": [
+    "qa-features/openapi.yml",
+    "qa-features/selectors.json",
+    "qa-features/api-expectations.yaml",
+    "qa-features/api/",
+    "qa-features/data/",
+    "qa-features/features/",
+    "qa-features/schemas/"
+  ],
+  "controller_paths": [
+    "harness/state.json"
+  ]
+}

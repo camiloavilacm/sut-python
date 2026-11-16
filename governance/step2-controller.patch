@@ -1,0 +1,132 @@
+--- a/harness/scripts/common.py
++++ b/harness/scripts/common.py
+@@ -140,6 +140,8 @@
+         for frozen in config(root, 'scope-policy')['immutable_contract_paths']:
+             if rel == frozen.rstrip('/') or (frozen.endswith('/') and rel.startswith(frozen)):
+                 return False
++    if step == '2' and any(part.lower() in ('cypress', 'step_definitions', 'pytest_bdd', 'campaign-report') for part in Path(rel).parts):
++        return False
+     if step == '1':
+         lower = rel.lower()
+         if any(x in lower for x in ('cypress', 'pytest', 'step_definitions', 'tracker', 'campaign-report', 'node_modules')):
+@@ -202,10 +204,20 @@
+         for label in ('feature_ref', 'tooling_ref'):
+             if not s[label]:
+                 continue
+-            repo = root if loc['repository'] == 'qa-features' else root / 'qa-features'
+-            proc = subprocess.run(['git', '-C', str(repo), 'rev-parse', '--verify', '--end-of-options', s[label] + '^{commit}'], capture_output=True, text=True)
+-            if proc.returncode != 0 or not s['git_revisions'].get(label) or proc.stdout.strip() != s['git_revisions'][label]:
+-                raise ValueError(label + ' is missing or moved from its recorded immutable commit')
++            if loc['kind'] == 'repository' and loc['repository'] in ('sut-python', 'sut-node'):
++                # Step 2 portable proof: independent checkout, no parent repo needed.
++                with tempfile.TemporaryDirectory(prefix='qa-feature-proof-') as temp:
++                    proc = subprocess.run(['git','clone','--bare','--quiet',str(root/'contracts/approved.bundle'),temp],capture_output=True)
++                    if proc.returncode: raise ValueError('Approved feature Git bundle is unavailable')
++                    proc = subprocess.run(['git','-C',temp,'rev-parse','--verify','--end-of-options',s[label]+'^{commit}'],capture_output=True,text=True)
++                    if proc.returncode or proc.stdout.strip() != s['git_revisions'].get(label): raise ValueError('Pinned reference missing from proof')
++                    tag = subprocess.run(['git','-C',temp,'rev-parse','seed-1-approved-v1^{commit}'],capture_output=True,text=True)
++                    if tag.returncode or tag.stdout.strip() != s['feature_ref']: raise ValueError('Approved tag proof differs')
++            else:
++                repo = root if loc['repository'] == 'qa-features' else root / 'qa-features'
++                proc = subprocess.run(['git', '-C', str(repo), 'rev-parse', '--verify', '--end-of-options', s[label] + '^{commit}'], capture_output=True, text=True)
++                if proc.returncode != 0 or not s['git_revisions'].get(label) or proc.stdout.strip() != s['git_revisions'][label]:
++                    raise ValueError(label + ' is missing or moved from its recorded immutable commit')
+     return s
+ 
+ def audit(root, baseline):
+--- a/harness/scripts/verify_step.py
++++ b/harness/scripts/verify_step.py
+@@ -8,6 +8,9 @@
+ from common import ROOT, state, validate, preflight, now, digest, source_digest, git_context, write, read, safe_relative, cli_error, audit, sign_evidence, verify_signature, config, location
+ 
+ def command(root, check_id):
++    if state(root)['authorized_step'] == '2' and check_id in config(root, 'steps')['steps']['2']['verification_checks']:
++        if location(root).get('repository') not in ('sut-python','sut-node'): raise ValueError('Step 2 checks run from each SUT repository')
++        return [sys.executable,str(root/'tools/verify.py'),'--check',check_id]
+     spec = root if location(root).get('repository') == 'qa-features' else root / 'qa-features'
+     if check_id in config(root, 'steps')['steps']['1']['verification_checks']:
+         return [sys.executable, str(spec / 'tools/validate/validate.py'), '--check', check_id]
+@@ -27,8 +30,8 @@
+ def run(root, check_id):
+     s = state(root)
+     preflight(root, s['authorized_step'], s['owner']['provider'], s['owner']['id'])
+-    if s['authorized_step'] not in ('0.5', '1'):
+-        raise ValueError('Only Phase 0.5 and Step 1 checks are implemented')
++    if s['authorized_step'] not in ('0.5', '1', '2'):
++        raise ValueError('Only Phase 0.5, Step 1 and Step 2 checks are implemented')
+     if check_id not in config(root, 'steps')['steps'][s['authorized_step']]['verification_checks']:
+         raise ValueError('Check is outside the active step')
+     args = command(root, check_id)
+@@ -36,7 +39,7 @@
+     before = source_digest(root)
+     sign_evidence(root, {})  # Fail before executing if external recorder is unavailable.
+     try:
+-        proc = subprocess.run(args, cwd=root, capture_output=True, timeout=300 if check_id == 'native-cycle' else 120)
++        proc = subprocess.run(args, cwd=root, capture_output=True, timeout=300 if check_id in ('native-cycle','seeds','ui-parity') else 120)
+         code, log = proc.returncode, proc.stdout + b'\nSTDERR:\n' + proc.stderr
+     except subprocess.TimeoutExpired as e:
+         code, log = None, (e.stdout or b'') + (e.stderr or b'') + b'\nTIMEOUT'
+@@ -74,7 +77,7 @@
+ def gate(root):
+     s = state(root)
+     preflight(root, s['authorized_step'], s['owner']['provider'], s['owner']['id'])
+-    if s['authorized_step'] not in ('0.5', '1'):
++    if s['authorized_step'] not in ('0.5', '1', '2'):
+         raise ValueError('No product-step completion implementation')
+     latest = {}
+     for path in s['evidence']:
+@@ -88,6 +91,9 @@
+         for name in config(root, 'steps')['steps']['1']['required_outputs']:
+             if not (spec / name).exists():
+                 failures.append('Missing required specification output: ' + name)
++    if s['authorized_step'] == '2':
++        for name in ('app.py' if location(root)['repository']=='sut-python' else 'app.js','compose.yaml','Dockerfile','db/schema.sql','frontend/manifest.json','contracts/provenance.json','tools/verify.py'):
++            if not (root/name).is_file(): failures.append('Missing Step 2 output: '+name)
+     for name in required:
+         try:
+             if name not in latest or validate_evidence(root, latest[name]) != 'PASS':
+--- /dev/null
++++ b/harness/evals/test_step2.py
+@@ -0,0 +1,42 @@
++"""Regression checks for Step 2 controller adaptations, using isolated fixtures."""
++from pathlib import Path
++import unittest, tempfile, shutil, os, sys
++from unittest.mock import patch
++sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
++from common import ROOT,read,write,preflight,inventory,git_context,audit
++from verify_step import command,gate
++class Step2Tests(unittest.TestCase):
++    def setUp(self):
++        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
++        self.root=Path(self.tmp.name)/'repo'
++        shutil.copytree(ROOT,self.root,ignore=shutil.ignore_patterns('.git','.venv','evidence','__pycache__','node_modules'))
++        (self.root/'harness/evidence').mkdir()
++        import subprocess
++        subprocess.run(['git','init','--quiet',str(self.root)],check=True)
++        self.s=read(self.root/'harness/state.json');self.s['evidence']=[]
++        self.s['baseline']='harness/evidence/fixture-baseline.json'
++        write(self.root/'harness/state.json',self.s)
++        self.auth=Path(self.tmp.name)/'auth.json';write(self.auth,self.s['authorization'])
++        self.env=patch.dict(os.environ,{'QA_AUTHORIZATION_FILE':str(self.auth)})
++        self.env.start();self.addCleanup(self.env.stop)
++        self.baseline={'step':'2','inventory':inventory(self.root),'git':git_context(self.root)}
++        write(self.root/self.s['baseline'],self.baseline)
++    def test_step2_hurl_executes_live_contract_probe(self):
++        args=command(self.root,'hurl')
++        self.assertEqual(args[-3:],[str(self.root/'tools/verify.py'),'--check','hurl'])
++    def test_missing_evidence_cannot_complete_step2(self):
++        failures=gate(self.root)
++        self.assertTrue(any('missing/non-PASS' in item for item in failures))
++    def test_tampered_external_authorization_blocks(self):
++        receipt=read(self.auth);receipt['approved_feature_ref']='0'*40;write(self.auth,receipt)
++        with self.assertRaises(ValueError):preflight(self.root,'2',self.s['owner']['provider'],self.s['owner']['id'])
++    def test_missing_approved_git_proof_blocks_clean_checkout(self):
++        (self.root/'contracts/approved.bundle').unlink()
++        with self.assertRaises(ValueError):preflight(self.root,'2',self.s['owner']['provider'],self.s['owner']['id'])
++    def test_future_repository_adapter_is_denied(self):
++        write(self.root/'harness/location.json',{'kind':'repository','repository':'qa-python'})
++        self.assertEqual(audit(self.root,self.baseline)['status'],'FAIL')
++    def test_future_runner_scaffolding_is_rejected(self):
++        (self.root/'cypress').mkdir()
++        self.assertEqual(audit(self.root,self.baseline)['status'],'FAIL')
++if __name__=='__main__':unittest.main()

@@ -1,0 +1,5 @@
+# Applies when this project layer is trusted. No credentials or model override.
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+[sandbox_workspace_write]
+network_access = false

@@ -1,0 +1,42 @@
+{
+  "qa-development": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "python3 -c 'import json,pathlib,subprocess,sys; data=json.load(sys.stdin); root=pathlib.Path(data[\"workspacePaths\"][0]).resolve(); sys.exit(subprocess.run([str(root/\".venv/bin/python\"),str(root/\"harness/scripts/antigravity_hook.py\"),sys.argv[1]],input=json.dumps(data),text=True).returncode)' SessionStart",
+        "timeout": 30
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c 'import json,pathlib,subprocess,sys; data=json.load(sys.stdin); root=pathlib.Path(data[\"workspacePaths\"][0]).resolve(); sys.exit(subprocess.run([str(root/\".venv/bin/python\"),str(root/\"harness/scripts/antigravity_hook.py\"),sys.argv[1]],input=json.dumps(data),text=True).returncode)' PreToolUse",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -c 'import json,pathlib,subprocess,sys; data=json.load(sys.stdin); root=pathlib.Path(data[\"workspacePaths\"][0]).resolve(); sys.exit(subprocess.run([str(root/\".venv/bin/python\"),str(root/\"harness/scripts/antigravity_hook.py\"),sys.argv[1]],input=json.dumps(data),text=True).returncode)' PostToolUse",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "type": "command",
+        "command": "python3 -c 'import json,pathlib,subprocess,sys; data=json.load(sys.stdin); root=pathlib.Path(data[\"workspacePaths\"][0]).resolve(); sys.exit(subprocess.run([str(root/\".venv/bin/python\"),str(root/\"harness/scripts/antigravity_hook.py\"),sys.argv[1]],input=json.dumps(data),text=True).returncode)' Stop",
+        "timeout": 30
+      }
+    ]
+  }
+}
