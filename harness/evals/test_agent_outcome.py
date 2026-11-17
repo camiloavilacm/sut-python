@@ -172,6 +172,14 @@ class OutcomeTests(unittest.TestCase):
         with self.assertRaises(ValueError):submit(self.root,t['task_id'],v)
         v['checks'][0]['status']='FAIL';submit(self.root,t['task_id'],v)
 
+    def test_governance_check_does_not_require_foreign_QA_archives(self):
+        from verify_step import command, validate_evidence
+        path='harness/evidence/governance.log';(self.root/path).write_text('Isolated controller fixture')
+        s=state(self.root);s['authorized_step']='7';write(self.root/'harness/state.json',s)
+        e={'version':1,'step':'7','provider':'codex','owner':'fixture','check_id':'agent-outcomes','command':command(self.root,'agent-outcomes'),'cwd':str(self.root),'started_at':now(),'finished_at':now(),'exit_code':0,'status':'PASS','log':path,'log_sha256':digest((self.root/path).read_bytes()),'source_sha256':source_digest(self.root),'git':git_context(self.root),'instrumentation':'subprocess-capture'}
+        e['signature']=sign_evidence(self.root,e)
+        self.assertEqual(validate_evidence(self.root,e),'PASS')
+
     def test_cli_rejects_malformed_json_and_requires_identity(self):
         t=self.task()
         p=subprocess.run([sys.executable,str(self.root/'harness/scripts/agent_outcome.py'),'submit','--task',t['task_id'],'--input','-'],cwd=self.root,input='{bad',text=True,capture_output=True)

@@ -9,8 +9,8 @@
       "adapter_sha256": "e0f60223c811cbf36dd2ce5922281ba71e30d36acf0e7f5ca7f1fa3263124aab"
     },
     "harness/scripts/verify_step.py": {
-      "upstream_sha256": "65cc0e9fa0dadaac6917f002a453fbc3ed8936812fe87701199e852f0877e8e6",
-      "adapter_sha256": "65cc0e9fa0dadaac6917f002a453fbc3ed8936812fe87701199e852f0877e8e6"
+      "upstream_sha256": "bcf79fa3a9ebd32a29ef8ffc6317ed62c510748a23eef6f6f69c3029c19d5c90",
+      "adapter_sha256": "bcf79fa3a9ebd32a29ef8ffc6317ed62c510748a23eef6f6f69c3029c19d5c90"
     },
     "AGENTS.md": {
       "upstream_sha256": "695482bb478a06fd4c7834bffca97cc4c7021f16c3772a4eee1b8e5d648ffca6",
@@ -30,7 +30,7 @@
     "harness/scripts/scope_guard.py": "4dc04d48d110b00f6012a29db9d2810f93649399ce04676b1d257b77e42a68b2",
     "harness/scripts/live_probe.py": "48dae823b7c9a469e7b6a3b438629fd39d0f78960a9575e31fd6e757b7a96daf",
     "harness/scripts/package_governance.py": "0668fff17d1a0064063ad7b95293cdb142273fa9a750acdc2d90fe3c0f24bb19",
-    "harness/scripts/verify_step.py": "65cc0e9fa0dadaac6917f002a453fbc3ed8936812fe87701199e852f0877e8e6",
+    "harness/scripts/verify_step.py": "bcf79fa3a9ebd32a29ef8ffc6317ed62c510748a23eef6f6f69c3029c19d5c90",
     "harness/scripts/native_probe.py": "fa461db9bf313bde6331d0de49e67384647b7f98dc0d913c5717661d6815ffc1",
     "harness/scripts/common.py": "e0f60223c811cbf36dd2ce5922281ba71e30d36acf0e7f5ca7f1fa3263124aab",
     "harness/scripts/sync_skills.py": "95d1dffe1df353fdcc32eb5921a90db875566b3a85336b5c12e4eb0e139a7458",

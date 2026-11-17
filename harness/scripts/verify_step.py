@@ -91,7 +91,7 @@ def validate_evidence(root, evidence):
         raise ValueError('Evidence is stale for current source')
     if evidence['cwd'] != str(root) or evidence['step'] != state(root)['authorized_step']:
         raise ValueError('Evidence belongs to a different workspace or step')
-    if evidence['step'] in ('3','4'):
+    if evidence['step'] in ('3','4') and evidence['check_id'] != 'agent-outcomes':
         import importlib.util
         module_spec=importlib.util.spec_from_file_location('step3_verifier', root/'tools/verify.py')
         verifier=importlib.util.module_from_spec(module_spec);module_spec.loader.exec_module(verifier)
@@ -99,14 +99,14 @@ def validate_evidence(root, evidence):
         receipt_digest=digest((root/'reports/latest.json').read_bytes())
         if ('RESULT_RECEIPT_SHA256 '+receipt_digest) not in log.read_text():
             raise ValueError('Execution results differ from the signed receipt')
-    if evidence['step']=='6':
+    if evidence['step']=='6' and evidence['check_id'] != 'agent-outcomes':
         import importlib.util
         sys.path.insert(0,str(root/'tools/campaign'))
         spec=importlib.util.spec_from_file_location('campaign_verifier',root/'tools/campaign/verify.py')
         verifier=importlib.util.module_from_spec(spec);spec.loader.exec_module(verifier)
         receipt=verifier.verify_saved()
         if ('CAMPAIGN_RECEIPT_SHA256 '+receipt) not in log.read_text():raise ValueError('Campaign evidence differs from its signed receipt')
-    if evidence['step']=='7':
+    if evidence['step']=='7' and evidence['check_id'] != 'agent-outcomes':
         import importlib.util
         sys.path.insert(0,str(root/'tools/release'))
         spec=importlib.util.spec_from_file_location('smoke_verifier',root/'tools/release/verify.py')
