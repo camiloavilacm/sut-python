@@ -1,7 +1,8 @@
 """Collect formal task outcomes; never grants authorization or executes QA/model calls."""
 import argparse
-from contextlib import contextmanager
+from contextlib import contextmanager, redirect_stdout
 import fcntl
+import io
 import json
 from pathlib import Path
 import re
@@ -131,7 +132,8 @@ def assess(root, req, value):
                 if digest(safe_relative(root, evidence['log']).read_bytes()) != evidence['log_sha256']:
                     raise ValueError('Evidence log changed')
             else:
-                validate_evidence(root, evidence)
+                with redirect_stdout(io.StringIO()):
+                    validate_evidence(root, evidence)
             if evidence['status'] != entry['status']:
                 raise ValueError('Claimed status contradicts recorded evidence')
             if 'check_id' in entry:

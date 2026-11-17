@@ -1,5 +1,7 @@
 """Isolated adversarial controller tests; no model calls or business acceptance claims."""
 import copy
+from contextlib import redirect_stdout
+import io
 import json
 import os
 from pathlib import Path
@@ -179,6 +181,30 @@ class OutcomeTests(unittest.TestCase):
         e={'version':1,'step':'7','provider':'codex','owner':'fixture','check_id':'agent-outcomes','command':command(self.root,'agent-outcomes'),'cwd':str(self.root),'started_at':now(),'finished_at':now(),'exit_code':0,'status':'PASS','log':path,'log_sha256':digest((self.root/path).read_bytes()),'source_sha256':source_digest(self.root),'git':git_context(self.root),'instrumentation':'subprocess-capture'}
         e['signature']=sign_evidence(self.root,e)
         self.assertEqual(validate_evidence(self.root,e),'PASS')
+
+    def test_verifier_diagnostics_do_not_pollute_collector_stdout(self):
+        from verify_step import command
+        path='harness/evidence/diagnostic.json';write(self.root/path,{'status':'PASS','check_id':'adapters','command':command(self.root,'adapters'),'cwd':str(self.root),'exit_code':0})
+        s=state(self.root);s['evidence']=[path];write(self.root/'harness/state.json',s)
+        t=self.task();v=self.value(t);v['checks']=[{'check_id':'adapters','status':'PASS','evidence':[path]}]
+        output=io.StringIO()
+        with patch('verify_step.validate_evidence',side_effect=lambda *_: print('Verifier diagnostic')):
+            with redirect_stdout(output):submit(self.root,t['task_id'],v)
+        self.assertEqual(output.getvalue(),'')
+
+    def test_real_git_checkout_handoff_accounts_only_for_its_output(self):
+        subprocess.run(['git','init','--quiet',str(self.root)],check=True)
+        write(self.root/'harness/location.json',{'kind':'repository','repository':'qa-features'})
+        auth={'step':'1','source':'human','reference':'ISOLATED FIXTURE','approved_feature_ref':None}
+        ledger=Path(self.tmp.name)/'authorization.json';write(ledger,auth)
+        s=state(self.root);s.update(authorized_step='1',phase='1',authorization=auth,completed_steps=['0.5'],prerequisites={'phase0':'PASS','phase05':'PASS','contract-inputs':'PASS'})
+        write(self.root/'harness/state.json',s)
+        with patch.dict(os.environ,{'QA_AUTHORIZATION_FILE':str(ledger)}):
+            t=self.task();submit(self.root,t['task_id'],self.value(t))
+            h=self.root/'harness/evidence/new-git-handoff.json'
+            transfer(self.root,'release','codex','fixture',h)
+            transfer(self.root,'claim','codex','receiver',h)
+            self.assertEqual(state(self.root)['owner']['id'],'receiver')
 
     def test_cli_rejects_malformed_json_and_requires_identity(self):
         t=self.task()

@@ -23,9 +23,9 @@
   },
   "canonical_source": "qa-features/governance/source",
   "canonical_files": {
-    "harness/scripts/ownership.py": "59c47962e51cf40b5acd85eb8b01319cd66571c297a099a26fd947be6551b640",
+    "harness/scripts/ownership.py": "635f081729dfa3cd3bc5d529adf4747dbdf583a285e78efe21eb54e421684221",
     "harness/scripts/native_acceptance.py": "adbea94783256a871137e3c6e04801c0765484afb934c3f4e010e186df20c80b",
-    "harness/scripts/agent_outcome.py": "c714e5c690deb510cea714753cffdfdbdbed108f0138c2be74f3c09d04501b3c",
+    "harness/scripts/agent_outcome.py": "a4e56722c31b16f51678f5eb1f7f25bbe592c84c902d72232d56df2fcb7e2407",
     "harness/scripts/validate_adapters.py": "8199d8edcc54fde1d6026b37671c1216bf4e25131073db87625c2959c33afa44",
     "harness/scripts/scope_guard.py": "4dc04d48d110b00f6012a29db9d2810f93649399ce04676b1d257b77e42a68b2",
     "harness/scripts/live_probe.py": "48dae823b7c9a469e7b6a3b438629fd39d0f78960a9575e31fd6e757b7a96daf",

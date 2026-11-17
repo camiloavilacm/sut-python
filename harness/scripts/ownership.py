@@ -4,6 +4,20 @@ import fcntl
 from pathlib import Path
 from common import ROOT, state, preflight, write, inventory, git_context, read, now, cli_error, audit, config
 
+def handoff_context(root, handoff, value=None):
+    """Preserve source/Git checks while excluding the handoff's own output file."""
+    value = git_context(root) if value is None else value
+    try:
+        relative = str(handoff.resolve().relative_to(root.resolve()))
+    except ValueError:
+        return value
+    if '.' in value:
+        row = value['.']['status']
+        row['output'] = '\n'.join(line for line in row['output'].splitlines()
+                                  if line[3:] != relative)
+    return value
+
+
 def transfer(root, action, provider, owner, handoff):
     lock = root / 'harness/evidence/ownership.lock'
     lock.parent.mkdir(parents=True, exist_ok=True)
@@ -19,7 +33,7 @@ def transfer(root, action, provider, owner, handoff):
                 item = read(root / path)
                 checks.append({k: item.get(k) for k in ('check_id', 'command', 'exit_code', 'status', 'source_sha256')})
             baseline = root / s['baseline']
-            write(handoff, {'agent_tasks': task_ids, 'step': s['authorized_step'], 'released_by': s['owner'], 'time': now(), 'inventory': inventory(root), 'git': git_context(root), 'completed_steps': s['completed_steps'], 'recorded_checks': checks, 'evidence': s['evidence'], 'scope_audit': audit(root, read(baseline)) if baseline.exists() else {'status': 'NOT RUN'}, 'blockers': s['blockers'], 'pending': s['next_action'], 'exclusions': 'No future-step execution; no product work during Phase 0.5'})
+            write(handoff, {'agent_tasks': task_ids, 'step': s['authorized_step'], 'released_by': s['owner'], 'time': now(), 'inventory': inventory(root), 'git': handoff_context(root, handoff), 'completed_steps': s['completed_steps'], 'recorded_checks': checks, 'evidence': s['evidence'], 'scope_audit': audit(root, read(baseline)) if baseline.exists() else {'status': 'NOT RUN'}, 'blockers': s['blockers'], 'pending': s['next_action'], 'exclusions': 'No future-step execution; no product work during Phase 0.5'})
             s['owner'] = None
         else:
             if config(root, 'providers')['providers'][provider].get('validation_mode') == 'artifacts-only':
@@ -36,7 +50,7 @@ def transfer(root, action, provider, owner, handoff):
             expected.pop('harness/state.json', None)
             current = inventory(root)
             current.pop('harness/state.json', None)
-            if h['step'] != s['authorized_step'] or expected != current or h['git'] != git_context(root):
+            if h['step'] != s['authorized_step'] or expected != current or handoff_context(root, handoff, h['git']) != handoff_context(root, handoff):
                 raise ValueError('Handoff and actual workspace differ')
             s['owner'] = {'provider': provider, 'id': owner}
             s['agent_tasks'] = []
