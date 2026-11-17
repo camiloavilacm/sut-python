@@ -1,6 +1,6 @@
 # sut-python — SEED-1 SUT
 
-Independent Step 2 application. The approved feature_ref is `12a55fb4b9312303378af72f96a28734b6b9ec9a` (`seed-1-approved-v1`). Contracts are byte-for-byte snapshots with a portable Git bundle proving their source; no parent workspace, Git file transport or untracked shared files are required.
+Reference application for the [AI-assisted automation showcase](https://github.com/camiloavilacm/qa-features). Read the [reviewer guide](https://github.com/camiloavilacm/qa-features/blob/main/REVIEWER_GUIDE.md) or follow the [one-framework first run](https://github.com/camiloavilacm/qa-features/blob/main/docs/first-run.md). The approved feature_ref is `12a55fb4b9312303378af72f96a28734b6b9ec9a` (`seed-1-approved-v1`). Contracts are byte-for-byte snapshots with a portable Git bundle proving their source; no parent workspace, Git file transport or untracked shared files are required.
 
 ## Run
 
@@ -20,4 +20,6 @@ Create `.venv` and install harness/requirements.txt and tools/requirements.txt. 
 
 Native instructions and four skills are committed here. Canonical governance derives from qa-features at the feature_ref above, with Step 2 controller maintenance recorded in governance/adapter-revision.json. Fresh clones require external human authorization and recorder key before writable harness activation. Claude is artifacts-only under the approved exception; live Claude remains NOT RUN.
 
-The Step 2 controller extension is maintained in this authorized repository, with a patch against the frozen canonical source in governance/step2-controller.patch. The parent workspace controller remains unchanged. Use this repository’s verify_step.py for Step 2 evidence; tools/workspace_gate.py combines both repository gates and the original workspace scope baseline. New Git repositories remain uncommitted for review; no remote or release tag is created.
+Current development governance is distributed from `qa-features/governance/source`; its provenance and adapter revision are recorded under harness/ and governance/. Historical Step 2 patches document the original implementation and do not describe the current controller. The repository is committed and publicly published. Ordinary local execution does not require development signing credentials; writable agent maintenance does.
+
+Code is [MIT licensed](LICENSE). See [contribution guidance](CONTRIBUTING.md), [security scope](SECURITY.md), and [third-party notices](THIRD_PARTY_NOTICES.md). The immutable approved feature tag and baseline contract remain unchanged.
