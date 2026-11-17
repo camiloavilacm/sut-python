@@ -12,12 +12,14 @@ def transfer(root, action, provider, owner, handoff):
         s = state(root)
         if action == 'release':
             preflight(root, s['authorized_step'], provider, owner)
+            from agent_outcome import require_outcomes
+            task_ids = require_outcomes(root)
             checks = []
             for path in s['evidence']:
                 item = read(root / path)
                 checks.append({k: item.get(k) for k in ('check_id', 'command', 'exit_code', 'status', 'source_sha256')})
             baseline = root / s['baseline']
-            write(handoff, {'step': s['authorized_step'], 'released_by': s['owner'], 'time': now(), 'inventory': inventory(root), 'git': git_context(root), 'completed_steps': s['completed_steps'], 'recorded_checks': checks, 'evidence': s['evidence'], 'scope_audit': audit(root, read(baseline)) if baseline.exists() else {'status': 'NOT RUN'}, 'blockers': s['blockers'], 'pending': s['next_action'], 'exclusions': 'No future-step execution; no product work during Phase 0.5'})
+            write(handoff, {'agent_tasks': task_ids, 'step': s['authorized_step'], 'released_by': s['owner'], 'time': now(), 'inventory': inventory(root), 'git': git_context(root), 'completed_steps': s['completed_steps'], 'recorded_checks': checks, 'evidence': s['evidence'], 'scope_audit': audit(root, read(baseline)) if baseline.exists() else {'status': 'NOT RUN'}, 'blockers': s['blockers'], 'pending': s['next_action'], 'exclusions': 'No future-step execution; no product work during Phase 0.5'})
             s['owner'] = None
         else:
             if config(root, 'providers')['providers'][provider].get('validation_mode') == 'artifacts-only':
@@ -26,6 +28,10 @@ def transfer(root, action, provider, owner, handoff):
                 raise ValueError('Previous owner has not released ownership')
             h = read(handoff)
             preflight(root, s['authorized_step'], provider, owner, require_owner=False)
+            from agent_outcome import require_outcomes
+            if h.get('agent_tasks') != s.get('agent_tasks', []):
+                raise ValueError('Handoff task registry differs; replay rejected')
+            require_outcomes(root, ids=h.get('agent_tasks', []), collector=h['released_by'])
             expected = dict(h['inventory'])
             expected.pop('harness/state.json', None)
             current = inventory(root)
@@ -33,6 +39,7 @@ def transfer(root, action, provider, owner, handoff):
             if h['step'] != s['authorized_step'] or expected != current or h['git'] != git_context(root):
                 raise ValueError('Handoff and actual workspace differ')
             s['owner'] = {'provider': provider, 'id': owner}
+            s['agent_tasks'] = []
         write(root / 'harness/state.json', s)
         return s
 

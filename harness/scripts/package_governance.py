@@ -14,7 +14,7 @@ def bundle(root, repository=None):
                 names.append(f.relative_to(root).as_posix())
     data = {name: (root / name).read_bytes() for name in names if name not in ('harness/state.json', 'harness/authorization.json', 'harness/provenance.json')}
     s = state(root)
-    s.update(authorized_step=None, owner=None, completed_steps=[], evidence=[], prerequisites={}, git_revisions={}, feature_ref=None, tooling_ref=None, approval_status='not_requested', blockers=['Fresh distribution: human authorization and local verification required'], next_action='Obtain explicit human authorization; no product work')
+    s.update(agent_tasks=[], authorized_step=None, owner=None, completed_steps=[], evidence=[], prerequisites={}, git_revisions={}, feature_ref=None, tooling_ref=None, approval_status='not_requested', blockers=['Fresh distribution: human authorization and local verification required'], next_action='Obtain explicit human authorization; no product work')
     s['authorization'] = {'step': 'none', 'source': 'human', 'reference': 'Not authorized; operator must supply external approval', 'approved_feature_ref': None}
     data['harness/state.json'] = (json.dumps(s, indent=2) + '\n').encode()
     # Instructions describe the process, not a transferable owner grant.

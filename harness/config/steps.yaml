@@ -30,7 +30,8 @@
         "codex-native",
         "claude-artifacts",
         "antigravity-native",
-        "native-cycle"
+        "native-cycle",
+        "agent-outcomes"
       ],
       "prohibited_future_artifacts": [
         "all-product-directories"
@@ -84,7 +85,8 @@
         "selectors",
         "baseline",
         "json-schemas",
-        "governance"
+        "governance",
+        "agent-outcomes"
       ],
       "prohibited_future_artifacts": [
         "later-step-implementation"
@@ -121,7 +123,8 @@
         "hurl",
         "seeds",
         "ui-parity",
-        "digests"
+        "digests",
+        "agent-outcomes"
       ],
       "prohibited_future_artifacts": [
         "later-step-implementation"
@@ -150,7 +153,8 @@
       ],
       "verification_checks": [
         "12-passes",
-        "observer-complete"
+        "observer-complete",
+        "agent-outcomes"
       ],
       "prohibited_future_artifacts": [
         "later-step-implementation"
@@ -226,7 +230,8 @@
       ],
       "verification_checks": [
         "6-passes",
-        "result-schema"
+        "result-schema",
+        "agent-outcomes"
       ],
       "prohibited_future_artifacts": [
         "later-step-implementation"
@@ -242,7 +247,13 @@
         "feature-approved"
       ],
       "allowed_paths": [
-        "qa-features/tools/"
+        "qa-features/tools/",
+        "qa-features/harness/",
+        "qa-features/governance/",
+        "qa-features/planning/",
+        "harness/config/steps.yaml",
+        "harness/scripts/verify_step.py",
+        "harness/evals/test_shared_controller.py"
       ],
       "allowed_repositories": [
         "qa-features"
@@ -257,7 +268,8 @@
         "dry-run",
         "sandbox-comment",
         "idempotency",
-        "no-transition"
+        "no-transition",
+        "agent-outcomes"
       ],
       "prohibited_future_artifacts": [
         "later-step-implementation"
@@ -275,7 +287,9 @@
       "allowed_paths": [
         "qa-features/",
         "qa-python/",
-        "qa-typescript/"
+        "qa-typescript/",
+        "harness/",
+        "planning/"
       ],
       "allowed_repositories": [
         "qa-features",
@@ -294,7 +308,8 @@
         "six-jobs",
         "single-report",
         "failure-paths",
-        "no-model-calls"
+        "no-model-calls",
+        "agent-outcomes"
       ],
       "prohibited_future_artifacts": [
         "later-step-implementation"
@@ -314,7 +329,13 @@
         "sut-python/",
         "sut-node/",
         "qa-python/",
-        "qa-typescript/"
+        "qa-typescript/",
+        "harness/",
+        "planning/",
+        "MASTER-CONTRACT.md",
+        "AGENTS.md",
+        ".agents/skills/",
+        ".claude/skills/"
       ],
       "allowed_repositories": [
         "qa-features",
@@ -333,7 +354,9 @@
         "image-digests",
         "reproduction",
         "18-passes",
-        "rollback"
+        "rollback",
+        "failure-reporting",
+        "agent-outcomes"
       ],
       "prohibited_future_artifacts": [
         "later-step-implementation"

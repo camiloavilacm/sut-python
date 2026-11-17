@@ -11,7 +11,7 @@ def check(root):
     state(root)
     from native_acceptance import validation_profile
     validation_profile(root)
-    for name in ('state', 'evidence'):
+    for name in ('state', 'evidence', 'agent-outcome'):
         from jsonschema import Draft202012Validator
         Draft202012Validator.check_schema(json.loads((root / f'harness/schemas/{name}.schema.json').read_text()))
     for name in ('steps', 'providers', 'scope-policy'):

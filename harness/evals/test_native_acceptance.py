@@ -1,4 +1,6 @@
 import json
+import os
+from unittest.mock import patch
 from pathlib import Path
 import shutil
 import sys
@@ -12,10 +14,18 @@ def seed_preparation_fixture(root):
     write(root / 'harness/location.json', {'kind': 'workspace', 'repository': None})
     write(root / 'harness/authorization.json', {'step': '0.5', 'source': 'conversation', 'reference': 'UNIT TEST FIXTURE; not actual project authorization', 'approved_feature_ref': None})
     s = state(root)
-    s.update(authorized_step='0.5', phase='0.5', authorization=read(root / 'harness/authorization.json'), completed_steps=[], prerequisites={}, feature_ref=None, tooling_ref=None, evidence=[])
+    s.update(agent_tasks=[], authorized_step='0.5', phase='0.5', authorization=read(root / 'harness/authorization.json'), completed_steps=[], prerequisites={}, feature_ref=None, tooling_ref=None, evidence=[])
     write(root / 'harness/state.json', s)
 
 class NativeAcceptanceTests(unittest.TestCase):
+    def setUp(self):
+        self.keydir = tempfile.TemporaryDirectory()
+        self.addCleanup(self.keydir.cleanup)
+        key = Path(self.keydir.name) / 'fixture.key'
+        key.write_bytes(os.urandom(32)); key.chmod(0o600)
+        env = patch.dict(os.environ, {'QA_EVIDENCE_KEY_FILE': str(key)})
+        env.start(); self.addCleanup(env.stop)
+
     def expected(self, provider):
         return {'authorized_step': '0.5', 'owner': {'provider': provider, 'id': 'fixture'}}
 

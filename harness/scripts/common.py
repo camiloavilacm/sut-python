@@ -253,6 +253,8 @@ def audit(root, baseline):
             if p.is_file() and p.suffix == '.json':
                 try:
                     value = read(p)
+                    if isinstance(value, dict) and value.get('kind') in ('agent-task-request', 'agent-outcome-receipt'):
+                        verify_signature(root, value)
                     if isinstance(value, dict) and value.get('instrumentation') == 'subprocess-capture':
                         validate(root, 'evidence', value)
                         verify_signature(root, value)

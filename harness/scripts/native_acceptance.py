@@ -148,7 +148,7 @@ def cycle(root, probe=invoke):
     deferred = {name: {'status': 'NOT RUN', 'scope': 'live discovery/enforcement/handoff', 'reason': policy['exception_reference']} for name in policy['artifacts_only_providers']}
     s = state(root)
     owner_id = 'native-cycle-evaluation'
-    s.update(owner={'provider': route[0], 'id': owner_id}, evidence=[])
+    s.update(agent_tasks=[], owner={'provider': route[0], 'id': owner_id}, evidence=[])
     write(root / 'harness/state.json', s)
     stable_source = source_digest(root)
     stable_git = git_context(root)
@@ -159,7 +159,15 @@ def cycle(root, probe=invoke):
             handoff = root / 'harness/evidence/native-handoff.json'
             transfer(root, 'release', route[index - 1], owner_id, handoff)
             transfer(root, 'claim', provider, owner_id, handoff)
+        from agent_outcome import start, submit
+        task = start(root, 'qa-step-executor', provider, owner_id)
         result = probe(root, provider)
+        outcome = {k: task[k] for k in ('task_id', 'role', 'provider', 'actor', 'step')}
+        outcome.update(schema_version='1.0', status={'PASS': 'completed', 'FAIL': 'failed', 'NOT RUN': 'not_run'}[result['status']],
+                       summary=result.get('reason', 'Native development probe'), deliverables=[], commands=[], checks=[],
+                       blockers=[] if result['status']=='PASS' else [result.get('reason','Native probe did not pass')],
+                       pending_approvals=[], remaining_work=[], boundary_confirmation='Isolated native probe only; no product work.')
+        submit(root, task['task_id'], outcome)
         records.append({'provider': provider, 'visit': index, **result})
         if result['status'] != 'PASS':
             return {'status': result['status'], 'profile': policy['profile'], 'deferred': deferred, 'sessions': records, 'cycle_complete': False}

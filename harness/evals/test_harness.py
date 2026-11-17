@@ -27,6 +27,7 @@ class HarnessTests(unittest.TestCase):
         self.root = Path(self.tmp.name) / 'workspace'
         shutil.copytree(ROOT, self.root, ignore=shutil.ignore_patterns('.git', 'evidence', '.venv', '__pycache__', 'qa-features', 'sut-python', 'sut-node', 'qa-python', 'qa-typescript'))
         (self.root / 'harness/evidence').mkdir()
+        write(self.root / 'harness/location.json', {'kind': 'workspace', 'repository': None})
         # These provider-neutral simulations cover the stricter all-live profile.
         providers = read(self.root / 'harness/config/providers.yaml')
         providers['validation_policy'] = {'profile': 'all-live', 'required_live_providers': ['antigravity', 'codex', 'claude'], 'artifacts_only_providers': [], 'exception_reference': None}
@@ -34,9 +35,8 @@ class HarnessTests(unittest.TestCase):
             item['validation_mode'] = 'live'
         write(self.root / 'harness/config/providers.yaml', providers)
         write(self.root / 'harness/authorization.json', {'step': '0.5', 'source': 'conversation', 'reference': 'UNIT TEST FIXTURE; not actual project authorization', 'approved_feature_ref': None})
-        write(self.root / 'harness/location.json', {'kind': 'workspace', 'repository': None})
         self.s = state(self.root)
-        self.s.update(authorized_step='0.5', phase='0.5', authorization=read(self.root / 'harness/authorization.json'), completed_steps=[], prerequisites={}, feature_ref=None, tooling_ref=None)
+        self.s.update(agent_tasks=[], authorized_step='0.5', phase='0.5', authorization=read(self.root / 'harness/authorization.json'), completed_steps=[], prerequisites={}, feature_ref=None, tooling_ref=None)
         self.s['evidence'] = []
         self.s['owner'] = {'provider': 'codex', 'id': 'fixture-owner'}
         write(self.root / 'harness/state.json', self.s)
@@ -206,6 +206,13 @@ class HarnessTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'drifted'):
             sync(self.root, check=True)
 
+    def record_fixture_outcome(self, provider):
+        from agent_outcome import start, submit
+        task = start(self.root, 'qa-step-executor', provider, 'fixture-owner')
+        value = {k: task[k] for k in ('task_id', 'role', 'provider', 'actor', 'step')}
+        value.update(schema_version='1.0', status='completed', summary='Isolated handoff fixture', deliverables=[], commands=[], checks=[], blockers=[], pending_approvals=[], remaining_work=[], boundary_confirmation='No real implementation evidence.')
+        submit(self.root, task['task_id'], value)
+
     def test_handoff_cycle_preserves_state_and_scope(self):
         self.owner('antigravity')
         for before, after in [('antigravity', 'codex'), ('codex', 'claude'), ('claude', 'antigravity')]:
@@ -213,6 +220,7 @@ class HarnessTests(unittest.TestCase):
                 handoff = self.root / 'harness/evidence/handoff.json'
                 with self.assertRaisesRegex(ValueError, 'not released'):
                     transfer(self.root, 'claim', after, 'fixture-owner', handoff)
+                self.record_fixture_outcome(before)
                 transfer(self.root, 'release', before, 'fixture-owner', handoff)
                 transfer(self.root, 'claim', after, 'fixture-owner', handoff)
                 actual = preflight(self.root, '0.5', after, 'fixture-owner')
@@ -221,9 +229,10 @@ class HarnessTests(unittest.TestCase):
 
     def test_handoff_rejects_unexpected_modification(self):
         handoff = self.root / 'harness/evidence/handoff.json'
+        self.record_fixture_outcome('codex')
         transfer(self.root, 'release', 'codex', 'fixture-owner', handoff)
         (self.root / 'MASTER-CONTRACT.md').write_text('changed after release')
-        with self.assertRaisesRegex(ValueError, 'differ'):
+        with self.assertRaisesRegex(ValueError, 'differ|stale'):
             transfer(self.root, 'claim', 'claude', 'fixture-owner', handoff)
 
     def test_path_escape_and_symlink_detection(self):

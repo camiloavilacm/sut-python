@@ -13,3 +13,5 @@
 - Boundary confirmation: stopped at authorized scope; next step not started:
 
 Receiving owner must inspect authorization, this handoff, persisted state and actual Git/filesystem state, then run preflight before writes. This template is not an authorization record or active ownership transfer.
+
+Formal skill-task outcomes must follow the versioned schema and collector workflow in `harness/outcomes.md`. Valid JSON outcomes and controller receipts are mandatory at task acceptance, step completion and ownership handoff. Ordinary conversation remains free-form.

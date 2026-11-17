@@ -1,20 +1,20 @@
 {
   "feature_ref": "12a55fb4b9312303378af72f96a28734b6b9ec9a",
   "upstream": "qa-features/governance/source",
-  "revision": "maintenance-shared-v1",
-  "reason": "Byte-identical shared controller; registered Step 2\u20134 checks retain prior semantics",
+  "revision": "agent-outcomes-v1",
+  "reason": "Self-contained outcome collection, receipts, acceptance and handoff validation; runtime source unchanged",
   "files": {
     "harness/scripts/common.py": {
-      "upstream_sha256": "34f55a4198bb6fad97b25954dc48bda50f27ab1501bf3ee7bd2e6640def6ef75",
-      "adapter_sha256": "73c9fda469bf99b8a70dcb3d8a2a78d45eb41cb318831f150a50e67a816e26cc"
+      "upstream_sha256": "e0f60223c811cbf36dd2ce5922281ba71e30d36acf0e7f5ca7f1fa3263124aab",
+      "adapter_sha256": "e0f60223c811cbf36dd2ce5922281ba71e30d36acf0e7f5ca7f1fa3263124aab"
     },
     "harness/scripts/verify_step.py": {
-      "upstream_sha256": "8e2a1ed079408ee06ddd358c85f3c2b61afeaf3201c7ceb15cbff01ddd2074f2",
-      "adapter_sha256": "85c6fb4ff41f036415fb667ff02ece8712aafb66c661142ed2db0236b1ca0936"
+      "upstream_sha256": "65cc0e9fa0dadaac6917f002a453fbc3ed8936812fe87701199e852f0877e8e6",
+      "adapter_sha256": "65cc0e9fa0dadaac6917f002a453fbc3ed8936812fe87701199e852f0877e8e6"
     },
     "AGENTS.md": {
-      "upstream_sha256": "0a739b5c9ab15583eb0a246d8f8a49a50f12edcd415ffa693135b7f49b2b2e54",
-      "adapter_sha256": "0a739b5c9ab15583eb0a246d8f8a49a50f12edcd415ffa693135b7f49b2b2e54"
+      "upstream_sha256": "695482bb478a06fd4c7834bffca97cc4c7021f16c3772a4eee1b8e5d648ffca6",
+      "adapter_sha256": "695482bb478a06fd4c7834bffca97cc4c7021f16c3772a4eee1b8e5d648ffca6"
     },
     "harness/evals/test_step2.py": {
       "upstream_sha256": null,
@@ -23,7 +23,20 @@
   },
   "canonical_source": "qa-features/governance/source",
   "canonical_files": {
-    "harness/scripts/common.py": "73c9fda469bf99b8a70dcb3d8a2a78d45eb41cb318831f150a50e67a816e26cc",
-    "harness/scripts/verify_step.py": "85c6fb4ff41f036415fb667ff02ece8712aafb66c661142ed2db0236b1ca0936"
+    "harness/scripts/ownership.py": "59c47962e51cf40b5acd85eb8b01319cd66571c297a099a26fd947be6551b640",
+    "harness/scripts/native_acceptance.py": "adbea94783256a871137e3c6e04801c0765484afb934c3f4e010e186df20c80b",
+    "harness/scripts/agent_outcome.py": "c714e5c690deb510cea714753cffdfdbdbed108f0138c2be74f3c09d04501b3c",
+    "harness/scripts/validate_adapters.py": "8199d8edcc54fde1d6026b37671c1216bf4e25131073db87625c2959c33afa44",
+    "harness/scripts/scope_guard.py": "4dc04d48d110b00f6012a29db9d2810f93649399ce04676b1d257b77e42a68b2",
+    "harness/scripts/live_probe.py": "48dae823b7c9a469e7b6a3b438629fd39d0f78960a9575e31fd6e757b7a96daf",
+    "harness/scripts/package_governance.py": "0668fff17d1a0064063ad7b95293cdb142273fa9a750acdc2d90fe3c0f24bb19",
+    "harness/scripts/verify_step.py": "65cc0e9fa0dadaac6917f002a453fbc3ed8936812fe87701199e852f0877e8e6",
+    "harness/scripts/native_probe.py": "fa461db9bf313bde6331d0de49e67384647b7f98dc0d913c5717661d6815ffc1",
+    "harness/scripts/common.py": "e0f60223c811cbf36dd2ce5922281ba71e30d36acf0e7f5ca7f1fa3263124aab",
+    "harness/scripts/sync_skills.py": "95d1dffe1df353fdcc32eb5921a90db875566b3a85336b5c12e4eb0e139a7458",
+    "harness/scripts/hook_core.py": "ba93c6ccce68f2badd78e32db3fccb1f20405662c4619c13d174ffac391a1c8f",
+    "harness/scripts/antigravity_hook.py": "9dbbfd1dd5db22305f01797c5f86a48b35d285b85f33f37d230aa48d328b74fc",
+    "harness/scripts/claude_hook.py": "df05ebbb176d4b92c57c5057bdfd57c5d259346aff98b52e8d63e3f65ae5ad00",
+    "harness/scripts/preflight.py": "c2339991ce382d7147575618539a9d8dfe89c8615eced850224c77da4299a2a8"
   }
 }
